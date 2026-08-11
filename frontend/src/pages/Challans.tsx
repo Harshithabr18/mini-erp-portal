@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 interface ChallansProps {
   token: string;
@@ -66,7 +67,7 @@ const Challans: React.FC<ChallansProps> = ({ token, userRole }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/challans', {
+      const res = await fetch(`${API_URL}/api/challans`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -83,11 +84,11 @@ const Challans: React.FC<ChallansProps> = ({ token, userRole }) => {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       
-      const custRes = await fetch('http://localhost:5000/api/customers?limit=100', { headers });
+      const custRes = await fetch(`${API_URL}/api/customers?limit=100`, { headers });
       const custData = await custRes.json();
       if (custRes.ok) setCustomers(custData.customers || []);
 
-      const prodRes = await fetch('http://localhost:5000/api/products', { headers });
+      const prodRes = await fetch(`${API_URL}/api/products`, { headers });
       const prodData = await prodRes.json();
       if (prodRes.ok) setProducts(prodData || []);
     } catch (err) {
@@ -173,7 +174,7 @@ const Challans: React.FC<ChallansProps> = ({ token, userRole }) => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/challans', {
+      const res = await fetch(`${API_URL}/api/challans`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +204,7 @@ const Challans: React.FC<ChallansProps> = ({ token, userRole }) => {
   const handleUpdateStatus = async (challanId: string, nextStatus: 'CONFIRMED' | 'CANCELLED') => {
     setError('');
     try {
-      const res = await fetch(`http://localhost:5000/api/challans/${challanId}/status`, {
+      const res = await fetch(`${API_URL}/api/challans/${challanId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

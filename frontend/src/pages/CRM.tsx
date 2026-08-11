@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 interface CRMProps {
   token: string;
@@ -70,7 +71,7 @@ const CRM: React.FC<CRMProps> = ({ token, userRole }) => {
     setLoading(true);
     setError('');
     try {
-      let url = `http://localhost:5000/api/customers?page=${page}&limit=8`;
+      let url = `${API_URL}/api/customers?page=${page}&limit=8`;
       if (search) url += `&search=${encodeURIComponent(search)}`;
       if (statusFilter) url += `&status=${statusFilter}`;
       if (typeFilter) url += `&type=${typeFilter}`;
@@ -103,7 +104,7 @@ const CRM: React.FC<CRMProps> = ({ token, userRole }) => {
     
     // Fetch detail & followups
     try {
-      const res = await fetch(`http://localhost:5000/api/customers/${customer.id}`, {
+      const res = await fetch(`${API_URL}/api/customers/${customer.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -120,7 +121,7 @@ const CRM: React.FC<CRMProps> = ({ token, userRole }) => {
     if (!selectedCustomer || !newFollowUpNote.trim()) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/customers/${selectedCustomer.id}/followups`, {
+      const res = await fetch(`${API_URL}/api/customers/${selectedCustomer.id}/followups`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +163,7 @@ const CRM: React.FC<CRMProps> = ({ token, userRole }) => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/customers', {
+      const res = await fetch(`${API_URL}/api/customers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +207,7 @@ const CRM: React.FC<CRMProps> = ({ token, userRole }) => {
     setError('');
 
     try {
-      const res = await fetch(`http://localhost:5000/api/customers/${selectedCustomer.id}`, {
+      const res = await fetch(`${API_URL}/api/customers/${selectedCustomer.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

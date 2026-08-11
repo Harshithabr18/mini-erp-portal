@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 interface ProductsProps {
   token: string;
@@ -73,7 +74,7 @@ const Products: React.FC<ProductsProps> = ({ token, userRole }) => {
     setLoading(true);
     setError('');
     try {
-      let url = 'http://localhost:5000/api/products';
+      let url = `${API_URL}/api/products`;
       const params: string[] = [];
       if (search) params.push(`search=${encodeURIComponent(search)}`);
       if (categoryFilter) params.push(`category=${categoryFilter}`);
@@ -102,7 +103,7 @@ const Products: React.FC<ProductsProps> = ({ token, userRole }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/products/logs', {
+      const res = await fetch(`${API_URL}/api/products/logs`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -142,7 +143,7 @@ const Products: React.FC<ProductsProps> = ({ token, userRole }) => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/products', {
+      const res = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +184,7 @@ const Products: React.FC<ProductsProps> = ({ token, userRole }) => {
     setError('');
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${selectedProduct.id}`, {
+      const res = await fetch(`${API_URL}/api/products/${selectedProduct.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -227,7 +228,7 @@ const Products: React.FC<ProductsProps> = ({ token, userRole }) => {
     setError('');
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${selectedProduct.id}/adjust-stock`, {
+      const res = await fetch(`${API_URL}/api/products/${selectedProduct.id}/adjust-stock`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

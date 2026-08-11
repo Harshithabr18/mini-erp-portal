@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 interface DashboardProps {
   token: string;
@@ -31,7 +32,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token, userRole, onNavigate }) =>
         let challanCount = 0;
 
         if (['ADMIN', 'SALES', 'ACCOUNTS'].includes(userRole)) {
-          const res = await fetch('http://localhost:5000/api/customers?limit=1', { headers });
+          const res = await fetch(`${API_URL}/api/customers?limit=1`, { headers });
           if (res.ok) {
             const data = await res.json();
             customerCount = data.meta.total;
@@ -39,7 +40,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token, userRole, onNavigate }) =>
         }
 
         if (['ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'].includes(userRole)) {
-          const res = await fetch('http://localhost:5000/api/products', { headers });
+          const res = await fetch(`${API_URL}/api/products`, { headers });
           if (res.ok) {
             const data = await res.json();
             productCount = data.length;
@@ -48,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token, userRole, onNavigate }) =>
         }
 
         if (['ADMIN', 'SALES', 'ACCOUNTS'].includes(userRole)) {
-          const res = await fetch('http://localhost:5000/api/challans', { headers });
+          const res = await fetch(`${API_URL}/api/challans`, { headers });
           if (res.ok) {
             const data = await res.json();
             challanCount = data.length;
