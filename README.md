@@ -139,6 +139,53 @@ Ensure you have **Node.js (v18 or v20)** installed.
 
 ---
 
+## 4. System Architecture
+
+### Architecture Diagram
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                     REACT FRONTEND                          │
+│                  Dashboard / User Interface                 │
+│                                                             │
+│   Admin  │  Sales  │  Warehouse  │  Accounts               │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           │ REST API + JWT
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     BACKEND SERVER                          │
+│                   Node.js + Express                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│                  JWT Authentication                         │
+│                           │                                 │
+│                           ▼                                 │
+│                  RBAC Middleware                            │
+│                                                             │
+│       ┌────────────┬────────────┬────────────┐              │
+│       │            │            │            │              │
+│       ▼            ▼            ▼            ▼              │
+│    Auth API   Customer API   Product API   Challan API      │
+│                             /Inventory                       │
+│                                                             │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           │ Database Operations
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       PRISMA ORM                            │
+│              Database Access / Data Layer                   │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                ┌──────────┴──────────┐
+                │                     │
+                ▼                     ▼
+       ┌─────────────────┐   ┌─────────────────────┐
+       │     SQLite      │   │     PostgreSQL      │
+       │ Local Development│   │     Production      │
+       └─────────────────┘   └─────────────────────┘
+
 ## ⚡ Core Business Logic & Rules Implemented
 
 1. **Transactional Stock Protection**: When a sales challan is created or updated to `CONFIRMED` status:
