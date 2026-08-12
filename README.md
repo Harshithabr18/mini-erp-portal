@@ -137,86 +137,103 @@ Ensure you have **Node.js (v18 or v20)** installed.
 └── README.md                  <-- Setup guide
 ```
 
----
+Here is your **exact same content with the correct ending**. Copy-paste this into your `README.md`:
 
-## 4. System Architecture
 
-### Architecture Diagram
+# 🏗️ System Architecture
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                     REACT FRONTEND                          │
-│                  Dashboard / User Interface                 │
-│                                                             │
-│   Admin  │  Sales  │  Warehouse  │  Accounts               │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ REST API + JWT
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     BACKEND SERVER                          │
-│                   Node.js + Express                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│                  JWT Authentication                         │
-│                           │                                 │
-│                           ▼                                 │
-│                  RBAC Middleware                            │
-│                                                             │
-│       ┌────────────┬────────────┬────────────┐              │
-│       │            │            │            │              │
-│       ▼            ▼            ▼            ▼              │
-│    Auth API   Customer API   Product API   Challan API      │
-│                             /Inventory                       │
-│                                                             │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ Database Operations
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       PRISMA ORM                            │
-│              Database Access / Data Layer                   │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                ┌──────────┴──────────┐
-                │                     │
-                ▼                     ▼
-       ┌─────────────────┐   ┌─────────────────────┐
-       │     SQLite      │   │     PostgreSQL      │
-       │ Local Development│   │     Production      │
-       └─────────────────┘   └─────────────────────┘
+## Architecture Overview
 
-## ⚡ Core Business Logic & Rules Implemented
+The Mini ERP + CRM Operations Portal follows a **full-stack client-server architecture**.
 
-1. **Transactional Stock Protection**: When a sales challan is created or updated to `CONFIRMED` status:
-   - The database queries the required products within a single transaction block.
-   - It checks if available stocks are sufficient. If any product is short, it returns an error `400 Bad Request` and cancels the transaction, preventing stocks from dipping below zero.
-   - It updates the stock value and creates entries in the `StockLog` table.
-2. **Stock Recovery on Cancellation**: If an Admin or Accounts Clerk transitions a confirmed challan to `CANCELLED`:
-   - The database updates the challan state.
-   - It adds back the quantity of all items in the challan to the inventory.
-   - It logs the transaction as an `IN` stock movement with the reason: `Sales Challan [Number] Cancelled - Stock Restored`.
-3. **Immutable Product Snapshot**: Challans store a JSON snapshot of items (`productsSnapshot` column) at the moment of issue containing `productId, name, sku, unitPrice, quantity`. This protects historical transaction invoices from changes if prices are updated in the product catalog later.
-4. **Role-Based Routing Gate**: The backend enforces role permissions on routes using Express middleware. For example:
-   - `/api/products/logs` can only be queried by `ADMIN` or `WAREHOUSE` users.
-   - `/api/customers` update endpoints can only be accessed by `ADMIN` or `SALES` users.
+The application consists of a React-based frontend, a Node.js and Express.js backend, JWT-based authentication with role-based access control, Prisma ORM for database access, and a relational database layer.
+
+The frontend communicates with the backend through REST APIs. The backend validates authentication and user roles before processing requests through the appropriate API route.
 
 ---
 
-## ☁️ Deployment Guide
+## Architecture Diagram
 
-To deploy this application online for free:
+## Architecture Diagram
 
-### 1. Database (Neon or Supabase)
-1. Register for a free PostgreSQL database on **Neon.tech** or **Supabase**.
-2. Copy the connection string (e.g. `postgresql://user:password@host/dbname?sslmode=require`).
-3. In `backend/prisma/schema.prisma`, change the database provider from `"sqlite"` to `"postgresql"`:
-   ```prisma
-   datasource db {
-     provider = "postgresql"
-     url      = env("DATABASE_URL")
-   }
-   ```
+<pre>
+┌─────────────────────────────────────────────────────────────────────┐
+│                         CLIENT / FRONTEND                           │
+│                                                                     │
+│                         React + TypeScript                          │
+│                                                                     │
+│  ┌───────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐ │
+│  │  Login    │   │ Dashboard  │   │    CRM     │   │ Products & │ │
+│  │   Page    │   │            │   │ Customers  │   │ Inventory  │ │
+│  └───────────┘   └────────────┘   └────────────┘   └────────────┘ │
+│                                                                     │
+│                         ┌──────────────┐                            │
+│                         │   Challans   │                            │
+│                         │   Module     │                            │
+│                         └──────────────┘                            │
+│                                                                     │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                │ REST API Requests
+                                │ + JWT Token
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                         BACKEND SERVER                              │
+│                                                                     │
+│                         Node.js + Express                           │
+│                                                                     │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │                    Authentication Layer                       │  │
+│  │                                                               │  │
+│  │                       JWT Authentication                      │  │
+│  └───────────────────────────────┬───────────────────────────────┘  │
+│                                  │                                  │
+│                                  ▼                                  │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │                    RBAC Middleware                            │  │
+│  │                                                               │  │
+│  │   Admin  │  Sales  │  Warehouse  │  Accounts                 │  │
+│  └───────────────────────────────┬───────────────────────────────┘  │
+│                                  │                                  │
+│                                  ▼                                  │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │                         API Routes                            │  │
+│  │                                                               │  │
+│  │  ┌──────────┐  ┌────────────┐  ┌───────────┐  ┌────────────┐ │  │
+│  │  │ Auth API │  │ Customer   │  │ Product / │  │  Challan   │ │  │
+│  │  │          │  │ API        │  │ Inventory │  │  API       │ │  │
+│  │  │          │  │            │  │ API       │  │            │ │  │
+│  │  └──────────┘  └────────────┘  └───────────┘  └────────────┘ │  │
+│  └───────────────────────────────┬───────────────────────────────┘  │
+│                                  │                                  │
+│                                  │ Database Operations              │
+│                                  ▼                                  │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │                         Prisma ORM                             │  │
+│  │                                                               │  │
+│  │                 Database Access / Data Layer                  │  │
+│  └───────────────────────────────┬───────────────────────────────┘  │
+│                                  │                                  │
+└──────────────────────────────────┼──────────────────────────────────┘
+                                   │
+                                   ▼
+              ┌─────────────────────────────────────┐
+              │              DATABASE                │
+              │                                     │
+              │       ┌──────────────────────┐      │
+              │       │ SQLite               │      │
+              │       │ Local Development    │      │
+              │       └──────────────────────┘      │
+              │                  │                  │
+              │                  │ Production       │
+              │                  ▼                  │
+              │       ┌──────────────────────┐      │
+              │       │ PostgreSQL           │      │
+              │       │ Production Database  │      │
+              │       └──────────────────────┘      │
+              └─────────────────────────────────────┘
+</pre>
+
 
 ### 2. Backend API (Render or Railway)
 1. Push your code to a GitHub repository.
