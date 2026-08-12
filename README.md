@@ -233,6 +233,21 @@ The frontend communicates with the backend through REST APIs. The backend valida
 
 ---
 
+# ☁️ Deployment Guide
+
+To deploy this application online for free:
+
+### 1. Database (Neon or Supabase)
+1. Register for a free PostgreSQL database on **Neon.tech** or **Supabase**.
+2. Copy the connection string (e.g. `postgresql://user:password@host/dbname?sslmode=require`).
+3. In `backend/prisma/schema.prisma`, change the database provider from `"sqlite"` to `"postgresql"`:
+   ```prisma
+   datasource db {
+     provider = "postgresql"
+     url      = env("DATABASE_URL")
+   }
+   ```
+
 ### 2. Backend API (Render or Railway)
 1. Push your code to a GitHub repository.
 2. Sign in to **Render.com** and create a new **Web Service** linked to your repo.
@@ -264,4 +279,9 @@ The frontend communicates with the backend through REST APIs. The backend valida
 2. **Local Session Authentication**: JWT tokens are stored in the client state and LocalStorage for demo ease. For high-security commercial applications, secure `HttpOnly` cookies are preferred.
 3. **No Dynamic User Creation UI**: New users cannot be registered directly from the UI. User accounts must be created by database seeds or admin SQL scripts.
 4. **Mocked Image Attachments**: AWS S3 image uploads are omitted to avoid setup friction/fees during grading.
+
+
+
+---
+
 
