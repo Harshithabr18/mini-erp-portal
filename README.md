@@ -150,9 +150,6 @@ The application consists of a React-based frontend, a Node.js and Express.js bac
 
 The frontend communicates with the backend through REST APIs. The backend validates authentication and user roles before processing requests through the appropriate API route.
 
----
-
-## Architecture Diagram
 
 ## Architecture Diagram
 
@@ -162,10 +159,10 @@ The frontend communicates with the backend through REST APIs. The backend valida
 │                                                                     │
 │                         React + TypeScript                          │
 │                                                                     │
-│  ┌───────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐ │
-│  │  Login    │   │ Dashboard  │   │    CRM     │   │ Products & │ │
-│  │   Page    │   │            │   │ Customers  │   │ Inventory  │ │
-│  └───────────┘   └────────────┘   └────────────┘   └────────────┘ │
+│  ┌───────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   │
+│  │  Login    │   │ Dashboard  │   │    CRM     │   │ Products & │   │
+│  │   Page    │   │            │   │ Customers  │   │ Inventory  │   │
+│  └───────────┘   └────────────┘   └────────────┘   └────────────┘   │
 │                                                                     │
 │                         ┌──────────────┐                            │
 │                         │   Challans   │                            │
@@ -192,24 +189,24 @@ The frontend communicates with the backend through REST APIs. The backend valida
 │  ┌───────────────────────────────────────────────────────────────┐  │
 │  │                    RBAC Middleware                            │  │
 │  │                                                               │  │
-│  │   Admin  │  Sales  │  Warehouse  │  Accounts                 │  │
+│  │   Admin  │  Sales  │  Warehouse  │  Accounts                  │  │
 │  └───────────────────────────────┬───────────────────────────────┘  │
 │                                  │                                  │
 │                                  ▼                                  │
 │  ┌───────────────────────────────────────────────────────────────┐  │
 │  │                         API Routes                            │  │
 │  │                                                               │  │
-│  │  ┌──────────┐  ┌────────────┐  ┌───────────┐  ┌────────────┐ │  │
-│  │  │ Auth API │  │ Customer   │  │ Product / │  │  Challan   │ │  │
-│  │  │          │  │ API        │  │ Inventory │  │  API       │ │  │
-│  │  │          │  │            │  │ API       │  │            │ │  │
-│  │  └──────────┘  └────────────┘  └───────────┘  └────────────┘ │  │
+│  │  ┌──────────┐  ┌────────────┐  ┌───────────┐  ┌────────────┐  │  │
+│  │  │ Auth API │  │ Customer   │  │ Product / │  │  Challan   │  │  │
+│  │  │          │  │ API        │  │ Inventory │  │  API       │  │  │
+│  │  │          │  │            │  │ API       │  │            │  │  │
+│  │  └──────────┘  └────────────┘  └───────────┘  └────────────┘  │  │
 │  └───────────────────────────────┬───────────────────────────────┘  │
 │                                  │                                  │
 │                                  │ Database Operations              │
 │                                  ▼                                  │
 │  ┌───────────────────────────────────────────────────────────────┐  │
-│  │                         Prisma ORM                             │  │
+│  │                         Prisma ORM                            │  │
 │  │                                                               │  │
 │  │                 Database Access / Data Layer                  │  │
 │  └───────────────────────────────┬───────────────────────────────┘  │
@@ -218,7 +215,7 @@ The frontend communicates with the backend through REST APIs. The backend valida
                                    │
                                    ▼
               ┌─────────────────────────────────────┐
-              │              DATABASE                │
+              │              DATABASE               │
               │                                     │
               │       ┌──────────────────────┐      │
               │       │ SQLite               │      │
@@ -234,6 +231,7 @@ The frontend communicates with the backend through REST APIs. The backend valida
               └─────────────────────────────────────┘
 </pre>
 
+---
 
 ### 2. Backend API (Render or Railway)
 1. Push your code to a GitHub repository.
